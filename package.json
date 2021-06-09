@@ -27,6 +27,8 @@
     "multer-storage-cloudinary": "^4.0.0",
     "pdfmake": "^0.1.71",
     "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.2",
     "uniqid": "^5.3.0"
   },
   "devDependencies": {
