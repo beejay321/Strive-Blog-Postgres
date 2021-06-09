@@ -17,10 +17,13 @@ const BlogPostsRouter = express.Router();
 
 BlogPostsRouter.post("/", async (req, res, next) => {
   try {
-    const newPost = new blogPostsModel(req.body);
-
-    const mongoRes = await newPost.save();
-    res.status(201).send(mongoRes);
+    console.log(req.body);
+    const { category, title, cover, read_time_value, read_time_unit, content } = req.body;
+    const dbResponse = await query(
+      `INSERT INTO blogs (category,title,cover,read_time_value,read_time_unit,content) 
+        VALUES('${category}', '${title}', '${cover}', ${read_time_value}, '${read_time_unit}', '${content}') RETURNING *`
+    );
+    res.send(dbResponse);
   } catch (error) {
     next(error);
   }
@@ -28,11 +31,8 @@ BlogPostsRouter.post("/", async (req, res, next) => {
 
 /****************GET POSTS******************/
 BlogPostsRouter.get("/", async (req, res, next) => {
-  try {    
-
-    const dbResponse = await query(
-      "SELECT * FROM blogs"
-    );
+  try {
+    const dbResponse = await query("SELECT * FROM blogs");
     res.send(dbResponse);
   } catch (error) {
     console.log(error);
@@ -43,16 +43,13 @@ BlogPostsRouter.get("/", async (req, res, next) => {
 /****************GET SINGLE POST******************/
 BlogPostsRouter.get("/:id", async (req, res, next) => {
   try {
-    const singlePost = await blogPostsModel.findById(req.params.id)
-    // .populate("author");
-    // const singlePosts = await blogPostsModel.findOne(${mongo query})
-
-    if (singlePost) {
-      res.send(singlePost);
+    const dbResponse = await query(`SELECT * FROM blogs WHERE post_id=${req.params.id}`);
+    if (dbResponse) {
+      res.status(200).send(dbResponse);
     } else {
-      next(createError(404, `Post ${req.params.id} not found `));
-      // createError(err.status, error.message)
+      res.status(404).send({ error: "blog not found" });
     }
+    // res.status(dbResponse ? 200 : 404).send(dbResponse ? dbResponse : { error: "student not found" });
   } catch (error) {
     console.log(error);
     next(error);
@@ -82,10 +79,5 @@ BlogPostsRouter.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
-
-
-   
-
-
 
 export default BlogPostsRouter;
