@@ -2,6 +2,8 @@ import express from "express";
 import models from "../db/index.js";
 const Author = models.Author;
 const Post = models.Post;
+const Category = models.Category;
+const Comment = models.Comment;
 
 const BlogPostsRouter = express.Router();
 
@@ -20,9 +22,14 @@ BlogPostsRouter.post("/", async (req, res, next) => {
 BlogPostsRouter.get("/", async (req, res, next) => {
   try {
     const data = await Post.findAll({
-    // include : Author
-    include : [{model : Author, attributes : ["name", "surname"]}]
-    // include : [{model : Author, attributes : {exclude : "avatar"}}],
+      // include : Author
+      include: [
+        { model: Author, attributes: ["name", "surname"] },
+        { model: Category, attributes: ["category"] },
+        { model: Comment, attributes: ["text"] },
+      ],
+
+      // include : [{model : Author, attributes : {exclude : "avatar"}}],
     });
     res.send(data);
   } catch (error) {
@@ -32,6 +39,20 @@ BlogPostsRouter.get("/", async (req, res, next) => {
   }
 });
 
+BlogPostsRouter.get("/category", async (req, res, next) => {
+  try {
+    const data = await Post.findAll({
+      include: Category,
+      attributes: ["categoryId", [sequelize.fn("count", "id"), "total_products"]],
+      group: ["categoryId", "category.id"],
+      order: ["total_products", "DESC"],
+    });
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 BlogPostsRouter.get("/:id", async (req, res, next) => {
   try {
   } catch (error) {

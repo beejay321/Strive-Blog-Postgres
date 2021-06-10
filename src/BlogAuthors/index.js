@@ -5,7 +5,7 @@ import multer from "multer";
 // import { generatePDFStream } from "../lib/pdf.js";
 import { pipeline } from "stream";
 import { Transform } from "json2csv";
-import authorsModel from "./schema.js";
+import authorsModel from "../db/authors.js"
 import query from "../utils/util.js";
 
 const authorsRouter = express.Router();

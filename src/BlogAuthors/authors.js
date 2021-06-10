@@ -20,7 +20,7 @@ authorsRouter.post("/", async (req, res, next) => {
 authorsRouter.get("/", async (req, res, next) => {
   try {
     const data = await Author.findAll({
-      attributes: ["name", "surname", "avatar"],
+      // attributes: ["name", "surname", "avatar"],
     });
 
     res.send(data);

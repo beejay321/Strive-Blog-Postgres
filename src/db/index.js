@@ -35,14 +35,20 @@ const models = {
   pool: pool,
 };
 
-/* models.Author.hasMany(models.Post);
-models.Post.belongsTo(models.Author); */
+models.Author.hasMany(models.Post);
+models.Post.belongsTo(models.Author);
+
+models.Category.hasMany(models.Post);
+models.Post.belongsTo(models.Category);
 
 models.Author.belongsToMany(models.Post, { through: { model: models.Comment, unique: false, timestamps: false } });
 models.Post.belongsToMany(models.Author, { through: { model: models.Comment, unique: false, timestamps: false } });
 
-models.Category.hasMany(models.Post);
-models.Post.belongsTo(models.Category);
+models.Author.hasMany(models.Comment);
+models.Comment.belongsTo(models.Author);
+
+models.Post.hasMany(models.Comment);
+models.Comment.belongsTo(models.Post);
 
 test();
 

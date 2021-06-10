@@ -5,6 +5,7 @@ import listEndpoints from "express-list-endpoints";
 import authorsRoutes from "./BlogAuthors/authors.js";
 import blogPostsRoutes from "./BlogPosts/posts.js";
 import commentsRoutes from "./Comments/index.js";
+import categoryRoutes from "./Category/index.js";
 import { notFoundErrorHandler, badRequestErrorHandler, forbiddenErrorHandler, catchAllErrorHandler } from "./errorHandlers.js";
 
 const server = express();
@@ -17,6 +18,7 @@ server.use(express.json());
 
 server.use("/authors", authorsRoutes);
 server.use("/comments", commentsRoutes);
+server.use("/category", categoryRoutes);
 
 server.use("/blogPosts", blogPostsRoutes);
 
@@ -31,7 +33,7 @@ console.table(listEndpoints(server));
 // server.on("error", (err) => console.log("server is not running ", err));
 
 db.sequelize
-  .sync({ force:true })
+  .sync({ force: false })
   .then(() => {
     server.listen(port, () => console.log("server is running: " + port));
     server.on("error", (error) => console.info(" ❌ Server is not running due to : ", error));

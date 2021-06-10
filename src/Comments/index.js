@@ -2,6 +2,7 @@ import express from "express";
 import models from "../db/index.js";
 const Comment = models.Comment;
 const Post = models.Post;
+const Author = models.Author;
 
 const commentsRouter = express.Router();
 
@@ -20,7 +21,10 @@ commentsRouter.post("/", async (req, res, next) => {
 commentsRouter.get("/", async (req, res, next) => {
   try {
     const data = await Comment.findAll({
-      // attributes: ["text"],
+      include: [
+        { model: Author, attributes: ["name", "surname"] },
+        { model: Post, attributes: ["title"] },
+      ],
     });
 
     res.send(data);

@@ -1,14 +1,13 @@
 import express from "express"; // third party module(needs to ne installed)
 import { validationResult } from "express-validator";
 import createError from "http-errors";
-import { blogPostsValidation } from "./validation.js";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 // import { generatePDFStream } from "../lib/pdf.js";
 // import { pipeline } from "stream";
 // import { Transform } from "json2csv";
-import blogPostsModel from "./schema.js";
+import blogPostsModel from "../db/blogPosts.js";
 import query from "../utils/util.js";
 
 const BlogPostsRouter = express.Router();
@@ -80,4 +79,4 @@ BlogPostsRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-export default BlogPostsRouter;
+// export default BlogPostsRouter;
