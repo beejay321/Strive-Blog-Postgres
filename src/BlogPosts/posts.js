@@ -26,7 +26,11 @@ BlogPostsRouter.get("/", async (req, res, next) => {
       include: [
         { model: Author, attributes: ["name", "surname"] },
         { model: Category, attributes: ["category"] },
-        { model: Comment, attributes: ["text"] },
+        {
+          model: Comment,
+          include: { model: Author, attributes: ["name", "surname"] },
+          // , attributes: ["text"]
+        },
       ],
       // include : [{model : Author, attributes : {exclude : "avatar"}}],
     });
@@ -37,7 +41,6 @@ BlogPostsRouter.get("/", async (req, res, next) => {
     // next(error);
   }
 });
-
 
 BlogPostsRouter.get("/:id", async (req, res, next) => {
   try {
