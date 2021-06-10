@@ -4,14 +4,18 @@ const Sequelize = s.Sequelize;
 const DataTypes = s.DataTypes;
 import PostsModel from "./blogPosts.js";
 import AuthorsModel from "./authors.js";
+import CommentsModel from "./comments.js";
+import CategoryModel from "./category.js";
 
 const { PGUSER, PGDATABASE, PGPASSWORD, PGHOST } = process.env;
+
+const pool = new pg.Pool();
 
 const sequelize = new Sequelize(PGDATABASE, PGUSER, PGPASSWORD, {
   host: PGHOST,
   dialect: "postgres",
 });
-const pool = new pg.Pool();
+
 const test = async () => {
   try {
     await sequelize.authenticate();
@@ -24,20 +28,22 @@ const test = async () => {
 const models = {
   Author: AuthorsModel(sequelize, DataTypes),
   Post: PostsModel(sequelize, DataTypes),
+  Comment: CommentsModel(sequelize, DataTypes),
+  Category: CategoryModel(sequelize, DataTypes),
 
   sequelize: sequelize,
   pool: pool,
 };
 
-models.Post.hasMany(models.Author);
-models.Author.belongsTo(models.Post);
+/* models.Author.hasMany(models.Post);
+models.Post.belongsTo(models.Author); */
 
-/* models.Class.belongsToMany(models.Student, {
-  through: { model: models.StudentClass, unique: false, timestamps: false },
-}); */
+models.Author.belongsToMany(models.Post, { through: { model: models.Comment, unique: false, timestamps: false } });
+models.Post.belongsToMany(models.Author, { through: { model: models.Comment, unique: false, timestamps: false } });
 
-/* models.Tutor.hasMany(models.Class);
-models.Class.belongsTo(models.Tutor); */
+models.Category.hasMany(models.Post);
+models.Post.belongsTo(models.Category);
+
 test();
 
 export default models;
