@@ -28,7 +28,6 @@ BlogPostsRouter.get("/", async (req, res, next) => {
         { model: Category, attributes: ["category"] },
         { model: Comment, attributes: ["text"] },
       ],
-
       // include : [{model : Author, attributes : {exclude : "avatar"}}],
     });
     res.send(data);
@@ -39,20 +38,7 @@ BlogPostsRouter.get("/", async (req, res, next) => {
   }
 });
 
-BlogPostsRouter.get("/category", async (req, res, next) => {
-  try {
-    const data = await Post.findAll({
-      include: Category,
-      attributes: ["categoryId", [sequelize.fn("count", "id"), "total_products"]],
-      group: ["categoryId", "category.id"],
-      order: ["total_products", "DESC"],
-    });
-    res.send(data);
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-});
+
 BlogPostsRouter.get("/:id", async (req, res, next) => {
   try {
   } catch (error) {
